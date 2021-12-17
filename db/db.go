@@ -3,13 +3,12 @@ package db
 import (
 	"context"
 	"log"
-	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var Ctx, Cancel = context.WithTimeout(context.Background(), 10*time.Second)
+var Ctx = context.Background()
 
 // Connect connects to the MongoDB database with the uri and name provided,
 // panics if the connection can't be made
