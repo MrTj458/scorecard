@@ -39,7 +39,7 @@ func (uc *Users) create(w http.ResponseWriter, r *http.Request) {
 
 	// Validate received JSON
 	if vErrors := views.Validate(u); vErrors != nil {
-		views.FieldError(w, http.StatusUnprocessableEntity, "invalid user object received", vErrors)
+		views.ErrorWithFields(w, http.StatusUnprocessableEntity, "invalid user object received", vErrors)
 		return
 	}
 
@@ -73,7 +73,7 @@ func (uc *Users) create(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
-		views.FieldError(w, http.StatusBadRequest, "email or username already in use", errors)
+		views.ErrorWithFields(w, http.StatusBadRequest, "email or username already in use", errors)
 		return
 	}
 

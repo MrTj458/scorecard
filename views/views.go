@@ -1,7 +1,6 @@
 package views
 
 import (
-	"bytes"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -27,17 +26,12 @@ type ErrorField struct {
 
 // JSON writes the given status code and interface to w as a JSON object
 func JSON(w http.ResponseWriter, status int, data interface{}) {
-	buf := &bytes.Buffer{}
-	enc := json.NewEncoder(buf)
-	enc.SetEscapeHTML(true)
-	if err := enc.Encode(data); err != nil {
-		http.Error(w, "error encoding response", http.StatusInternalServerError)
-		return
-	}
-
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(status)
-	w.Write(buf.Bytes())
+
+	enc := json.NewEncoder(w)
+	enc.SetEscapeHTML(true)
+	enc.Encode(data)
 }
 
 // Error writes the given status code and detail string to w as JSON
@@ -50,9 +44,9 @@ func Error(w http.ResponseWriter, status int, detail string) {
 	JSON(w, status, res)
 }
 
-// FieldError writes the given status code and detail string, along with a list
+// ErrorWithFields writes the given status code and detail string, along with a list
 // of `ErrorField`s to w as JSON
-func FieldError(w http.ResponseWriter, status int, detail string, fields []ErrorField) {
+func ErrorWithFields(w http.ResponseWriter, status int, detail string, fields []ErrorField) {
 	res := ErrorResponse{
 		StatusCode: status,
 		Detail:     detail,

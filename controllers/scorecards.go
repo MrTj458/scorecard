@@ -37,7 +37,7 @@ func (sc *Scorecards) create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if vErrors := views.Validate(s); vErrors != nil {
-		views.FieldError(w, http.StatusUnprocessableEntity, "invalid scorecard object received", vErrors)
+		views.ErrorWithFields(w, http.StatusUnprocessableEntity, "invalid scorecard object received", vErrors)
 		return
 	}
 
