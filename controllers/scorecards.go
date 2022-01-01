@@ -25,6 +25,7 @@ func (s *Scorecards) Routes() *chi.Mux {
 	r.Post("/", s.create)
 	r.Get("/", s.findAll)
 	r.Get("/{id}", s.findByID)
+	r.Post("/{cardId}/hole", s.addHole)
 
 	return r
 }
@@ -86,4 +87,41 @@ func (sc *Scorecards) findByID(w http.ResponseWriter, r *http.Request) {
 	}
 
 	views.JSON(w, http.StatusOK, s)
+}
+
+func (sc *Scorecards) addHole(w http.ResponseWriter, r *http.Request) {
+	cardId := chi.URLParam(r, "cardId")
+
+	var h models.Hole
+	if err := views.DecodeJSON(r.Body, &h); err != nil {
+		views.Error(w, http.StatusUnprocessableEntity, "invalid hole object received")
+		return
+	}
+
+	// Validate hole object
+	if vErrors := views.Validate(h); vErrors != nil {
+		views.ErrorWithFields(w, http.StatusUnprocessableEntity, "invalid hole object received", vErrors)
+		return
+	}
+
+	// Validate nested score objects
+	for _, s := range h.Scores {
+		if vErrors := views.Validate(s); vErrors != nil {
+			views.ErrorWithFields(w, http.StatusUnprocessableEntity, "invalid score object received", vErrors)
+			return
+		}
+	}
+
+	if err := sc.s.AddHole(cardId, h); err != nil {
+		views.Error(w, http.StatusBadRequest, "unable to find scorecard to add hole")
+		return
+	}
+
+	ret, err := sc.s.FindByID(cardId)
+	if err != nil {
+		views.Error(w, http.StatusInternalServerError, "unable to find newly created hole")
+		return
+	}
+
+	views.JSON(w, http.StatusCreated, ret)
 }

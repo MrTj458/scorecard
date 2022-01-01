@@ -17,23 +17,23 @@ type Scorecard struct {
 	NumHoles    int                `json:"num_holes" bson:"num_holes"`
 	CourseName  string             `json:"course_name" bson:"course_name"`
 	CourseState string             `json:"course_state" bson:"course_state"`
-	Players     []player           `json:"players" bson:"players"`
-	Holes       []hole             `json:"holes" bson:"holes"`
+	Players     []Player           `json:"players" bson:"players"`
+	Holes       []Hole             `json:"holes" bson:"holes"`
 }
 
-type player struct {
+type Player struct {
 	Username string             `json:"username" validate:"required" bson:"username"`
 	ID       primitive.ObjectID `json:"id" validate:"required" bson:"id"`
 }
 
-type hole struct {
-	Hole     int     `json:"hole" validate:"required" bson:"hole"`
+type Hole struct {
+	Number   int     `json:"number" validate:"required" bson:"number"`
 	Par      int     `json:"par" validate:"required" bson:"par"`
 	Distance int     `json:"distance" validate:"required" bson:"distance"`
-	Scores   []score `json:"scores" validate:"required" bson:"scores"`
+	Scores   []Score `json:"scores" validate:"required" bson:"scores"`
 }
 
-type score struct {
+type Score struct {
 	Username string             `json:"username" validate:"required" bson:"username"`
 	ID       primitive.ObjectID `json:"id" validate:"required" bson:"id"`
 	Strokes  int                `json:"strokes" validate:"required" bson:"strokes"`
@@ -44,7 +44,7 @@ type ScorecardIn struct {
 	NumHoles    int                `json:"num_holes" validate:"required"`
 	CourseName  string             `json:"course_name" validate:"required"`
 	CourseState string             `json:"course_state" validate:"required"`
-	Players     []player           `json:"players" validate:"required"`
+	Players     []Player           `json:"players" validate:"required"`
 }
 
 type ScorecardService struct {
@@ -69,7 +69,7 @@ func (ss *ScorecardService) Add(scorecard ScorecardIn) (string, error) {
 		CourseName:  scorecard.CourseName,
 		CourseState: scorecard.CourseState,
 		Players:     scorecard.Players,
-		Holes:       make([]hole, 0),
+		Holes:       make([]Hole, 0),
 	}
 
 	_, err := ss.coll.InsertOne(db.Ctx, s)
@@ -140,4 +140,18 @@ func (ss *ScorecardService) FindAllByUserId(userId string) ([]Scorecard, error) 
 	}
 
 	return scorecards, nil
+}
+
+func (ss *ScorecardService) AddHole(scorecardId string, hole Hole) error {
+	cardId, err := primitive.ObjectIDFromHex(scorecardId)
+	if err != nil {
+		return err
+	}
+
+	_, err = ss.coll.UpdateByID(db.Ctx, cardId, bson.D{{"$push", bson.D{{"holes", hole}}}})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
