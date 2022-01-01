@@ -26,6 +26,7 @@ func (s *Scorecards) Routes() *chi.Mux {
 	r.Get("/", s.findAll)
 	r.Get("/{id}", s.findByID)
 	r.Post("/{cardId}/hole", s.addHole)
+	r.Post("/{cardId}/complete", s.complete)
 
 	return r
 }
@@ -120,6 +121,23 @@ func (sc *Scorecards) addHole(w http.ResponseWriter, r *http.Request) {
 	ret, err := sc.s.FindByID(cardId)
 	if err != nil {
 		views.Error(w, http.StatusInternalServerError, "unable to find newly created hole")
+		return
+	}
+
+	views.JSON(w, http.StatusCreated, ret)
+}
+
+func (sc *Scorecards) complete(w http.ResponseWriter, r *http.Request) {
+	cardId := chi.URLParam(r, "cardId")
+
+	if err := sc.s.Complete(cardId); err != nil {
+		views.Error(w, http.StatusBadRequest, "unable to find scorecard to complete")
+		return
+	}
+
+	ret, err := sc.s.FindByID(cardId)
+	if err != nil {
+		views.Error(w, http.StatusInternalServerError, "unable to find newly finished scorecard")
 		return
 	}
 

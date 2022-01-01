@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/MrTj458/scorecard/db"
@@ -150,6 +151,21 @@ func (ss *ScorecardService) AddHole(scorecardId string, hole Hole) error {
 
 	_, err = ss.coll.UpdateByID(db.Ctx, cardId, bson.D{{"$push", bson.D{{"holes", hole}}}})
 	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (ss *ScorecardService) Complete(scorecardId string) error {
+	cardId, err := primitive.ObjectIDFromHex(scorecardId)
+	if err != nil {
+		return err
+	}
+
+	_, err = ss.coll.UpdateByID(db.Ctx, cardId, bson.D{{"$set", bson.D{{"end_time", time.Now().UTC()}}}})
+	if err != nil {
+		fmt.Println(err.Error())
 		return err
 	}
 
