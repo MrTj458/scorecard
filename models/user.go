@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -117,6 +118,30 @@ func (us *UserService) FindExistingUsers(email, username string) ([]User, error)
 	cur, err := us.coll.Find(db.Ctx, filter)
 	if err != nil {
 		log.Println(err)
+		return nil, err
+	}
+	defer cur.Close(db.Ctx)
+
+	var users []User
+	if err = cur.All(db.Ctx, &users); err != nil {
+		return nil, err
+	}
+
+	if users == nil {
+		users = make([]User, 0)
+	}
+
+	return users, nil
+}
+
+func (us *UserService) SearchByUsername(username string) ([]User, error) {
+	filter := bson.D{
+		{"username", username},
+	}
+
+	cur, err := us.coll.Find(db.Ctx, filter)
+	if err != nil {
+		fmt.Println(err)
 		return nil, err
 	}
 	defer cur.Close(db.Ctx)

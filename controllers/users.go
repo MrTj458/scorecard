@@ -22,8 +22,9 @@ func NewUsers(service *models.UserService) *Users {
 func (uc *Users) Routes() *chi.Mux {
 	r := chi.NewRouter()
 
-	r.Get("/", uc.findAll)
 	r.Post("/", uc.create)
+	r.Get("/", uc.findAll)
+	r.Get("/{id}", uc.findByID)
 
 	return r
 }
@@ -94,11 +95,34 @@ func (uc *Users) create(w http.ResponseWriter, r *http.Request) {
 }
 
 func (uc *Users) findAll(w http.ResponseWriter, r *http.Request) {
-	users, err := uc.s.FindAll()
+	username := r.URL.Query().Get("username")
+
+	var users []models.User
+	var err error
+
+	if len(username) == 0 {
+		users, err = uc.s.FindAll()
+	} else {
+		fmt.Println("Searching")
+		users, err = uc.s.SearchByUsername(username)
+	}
+
 	if err != nil {
 		views.Error(w, http.StatusInternalServerError, "error retrieving users")
 		return
 	}
 
 	views.JSON(w, http.StatusOK, users)
+}
+
+func (uc *Users) findByID(w http.ResponseWriter, r *http.Request) {
+	id := chi.URLParam(r, "id")
+
+	u, err := uc.s.FindByID(id)
+	if err != nil {
+		views.Error(w, http.StatusNotFound, fmt.Sprintf("user with id '%s' not found", id))
+		return
+	}
+
+	views.JSON(w, http.StatusOK, u)
 }
