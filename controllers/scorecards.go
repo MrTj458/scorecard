@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/MrTj458/scorecard/middleware"
 	"github.com/MrTj458/scorecard/models"
 	"github.com/MrTj458/scorecard/views"
 	"github.com/go-chi/chi/v5"
@@ -21,6 +22,7 @@ func NewScorecards(service *models.ScorecardStore) *Scorecards {
 
 func (s *Scorecards) Routes() *chi.Mux {
 	r := chi.NewRouter()
+	r.Use(middleware.RequireLogin)
 
 	r.Post("/", s.create)
 	r.Get("/", s.getAll)

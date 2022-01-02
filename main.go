@@ -7,10 +7,11 @@ import (
 
 	"github.com/MrTj458/scorecard/controllers"
 	"github.com/MrTj458/scorecard/db"
+	"github.com/MrTj458/scorecard/middleware"
 	"github.com/MrTj458/scorecard/models"
 	"github.com/MrTj458/scorecard/views"
 	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
+	chiMiddleware "github.com/go-chi/chi/v5/middleware"
 	"github.com/joho/godotenv"
 )
 
@@ -23,7 +24,8 @@ func main() {
 	db := db.Connect(os.Getenv("DB_URL"), os.Getenv("DB_NAME"))
 
 	r := chi.NewRouter()
-	r.Use(middleware.Logger)
+	r.Use(chiMiddleware.Logger)
+	r.Use(middleware.User)
 
 	usersController := controllers.NewUsers(models.NewUserStore(db))
 	scorecardsController := controllers.NewScorecards(models.NewScorecardStore(db))
