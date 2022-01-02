@@ -10,12 +10,12 @@ import (
 )
 
 type Scorecards struct {
-	s *models.ScorecardService
+	store *models.ScorecardStore
 }
 
-func NewScorecards(service *models.ScorecardService) *Scorecards {
+func NewScorecards(service *models.ScorecardStore) *Scorecards {
 	return &Scorecards{
-		s: service,
+		store: service,
 	}
 }
 
@@ -23,8 +23,8 @@ func (s *Scorecards) Routes() *chi.Mux {
 	r := chi.NewRouter()
 
 	r.Post("/", s.create)
-	r.Get("/", s.findAll)
-	r.Get("/{id}", s.findByID)
+	r.Get("/", s.getAll)
+	r.Get("/{id}", s.getByID)
 	r.Post("/{cardId}/hole", s.addHole)
 	r.Post("/{cardId}/complete", s.complete)
 
@@ -34,7 +34,7 @@ func (s *Scorecards) Routes() *chi.Mux {
 func (sc *Scorecards) create(w http.ResponseWriter, r *http.Request) {
 	var s models.ScorecardIn
 	if err := views.DecodeJSON(r.Body, &s); err != nil {
-		views.Error(w, http.StatusUnprocessableEntity, "invalid scorecard object received")
+		views.Error(w, http.StatusBadRequest, "invalid JSON object received")
 		return
 	}
 
@@ -43,31 +43,25 @@ func (sc *Scorecards) create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id, err := sc.s.Add(s)
+	newCard, err := sc.store.Add(s)
 	if err != nil {
 		views.Error(w, http.StatusInternalServerError, "unable to create new user")
 		return
 	}
 
-	ret, err := sc.s.FindByID(id)
-	if err != nil {
-		views.Error(w, http.StatusInternalServerError, "unable to find created scorecard")
-		return
-	}
-
-	views.JSON(w, http.StatusCreated, ret)
+	views.JSON(w, http.StatusCreated, newCard)
 }
 
-func (sc *Scorecards) findAll(w http.ResponseWriter, r *http.Request) {
+func (sc *Scorecards) getAll(w http.ResponseWriter, r *http.Request) {
 	user := r.URL.Query().Get("user")
 
 	var scorecards []models.Scorecard
 	var err error
 
 	if len(user) == 0 {
-		scorecards, err = sc.s.FindAll()
+		scorecards, err = sc.store.FindAll()
 	} else {
-		scorecards, err = sc.s.FindAllByUserId(user)
+		scorecards, err = sc.store.FindAllByUserId(user)
 	}
 
 	if err != nil {
@@ -78,10 +72,10 @@ func (sc *Scorecards) findAll(w http.ResponseWriter, r *http.Request) {
 	views.JSON(w, http.StatusOK, scorecards)
 }
 
-func (sc *Scorecards) findByID(w http.ResponseWriter, r *http.Request) {
+func (sc *Scorecards) getByID(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 
-	s, err := sc.s.FindByID(id)
+	s, err := sc.store.FindByID(id)
 	if err != nil {
 		views.Error(w, http.StatusNotFound, fmt.Sprintf("scorecard with id '%s' not found", id))
 		return
@@ -95,7 +89,7 @@ func (sc *Scorecards) addHole(w http.ResponseWriter, r *http.Request) {
 
 	var h models.Hole
 	if err := views.DecodeJSON(r.Body, &h); err != nil {
-		views.Error(w, http.StatusUnprocessableEntity, "invalid hole object received")
+		views.Error(w, http.StatusBadRequest, "invalid JSON object received")
 		return
 	}
 
@@ -113,33 +107,23 @@ func (sc *Scorecards) addHole(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if err := sc.s.AddHole(cardId, h); err != nil {
+	card, err := sc.store.AddHole(cardId, h)
+	if err != nil {
 		views.Error(w, http.StatusBadRequest, "unable to find scorecard to add hole")
 		return
 	}
 
-	ret, err := sc.s.FindByID(cardId)
-	if err != nil {
-		views.Error(w, http.StatusInternalServerError, "unable to find newly created hole")
-		return
-	}
-
-	views.JSON(w, http.StatusCreated, ret)
+	views.JSON(w, http.StatusCreated, card)
 }
 
 func (sc *Scorecards) complete(w http.ResponseWriter, r *http.Request) {
 	cardId := chi.URLParam(r, "cardId")
 
-	if err := sc.s.Complete(cardId); err != nil {
+	card, err := sc.store.Complete(cardId)
+	if err != nil {
 		views.Error(w, http.StatusBadRequest, "unable to find scorecard to complete")
 		return
 	}
 
-	ret, err := sc.s.FindByID(cardId)
-	if err != nil {
-		views.Error(w, http.StatusInternalServerError, "unable to find newly finished scorecard")
-		return
-	}
-
-	views.JSON(w, http.StatusCreated, ret)
+	views.JSON(w, http.StatusOK, card)
 }

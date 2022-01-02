@@ -25,8 +25,8 @@ func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 
-	usersController := controllers.NewUsers(models.NewUserService(db))
-	scorecardsController := controllers.NewScorecards(models.NewScorecardService(db))
+	usersController := controllers.NewUsers(models.NewUserStore(db))
+	scorecardsController := controllers.NewScorecards(models.NewScorecardStore(db))
 
 	r.Route("/api", func(r chi.Router) {
 		r.Mount("/users", usersController.Routes())

@@ -48,19 +48,19 @@ type ScorecardIn struct {
 	Players     []Player           `json:"players" validate:"required"`
 }
 
-type ScorecardService struct {
+type ScorecardStore struct {
 	db   *mongo.Database
 	coll *mongo.Collection
 }
 
-func NewScorecardService(db *mongo.Database) *ScorecardService {
-	return &ScorecardService{
+func NewScorecardStore(db *mongo.Database) *ScorecardStore {
+	return &ScorecardStore{
 		db:   db,
 		coll: db.Collection("scorecards"),
 	}
 }
 
-func (ss *ScorecardService) Add(scorecard ScorecardIn) (string, error) {
+func (ss *ScorecardStore) Add(scorecard ScorecardIn) (Scorecard, error) {
 	s := Scorecard{
 		ID:          primitive.NewObjectID(),
 		CreatedBy:   scorecard.CreatedBy,
@@ -75,13 +75,13 @@ func (ss *ScorecardService) Add(scorecard ScorecardIn) (string, error) {
 
 	_, err := ss.coll.InsertOne(db.Ctx, s)
 	if err != nil {
-		return "", err
+		return Scorecard{}, err
 	}
 
-	return s.ID.Hex(), nil
+	return s, nil
 }
 
-func (ss *ScorecardService) FindAll() ([]Scorecard, error) {
+func (ss *ScorecardStore) FindAll() ([]Scorecard, error) {
 	cur, err := ss.coll.Find(db.Ctx, bson.D{})
 	if err != nil {
 		return nil, err
@@ -100,7 +100,7 @@ func (ss *ScorecardService) FindAll() ([]Scorecard, error) {
 	return scorecards, nil
 }
 
-func (ss *ScorecardService) FindByID(id string) (Scorecard, error) {
+func (ss *ScorecardStore) FindByID(id string) (Scorecard, error) {
 	oId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return Scorecard{}, err
@@ -115,7 +115,7 @@ func (ss *ScorecardService) FindByID(id string) (Scorecard, error) {
 	return s, nil
 }
 
-func (ss *ScorecardService) FindAllByUserId(userId string) ([]Scorecard, error) {
+func (ss *ScorecardStore) FindAllByUserId(userId string) ([]Scorecard, error) {
 	uId, err := primitive.ObjectIDFromHex(userId)
 	if err != nil {
 		return nil, err
@@ -143,31 +143,31 @@ func (ss *ScorecardService) FindAllByUserId(userId string) ([]Scorecard, error) 
 	return scorecards, nil
 }
 
-func (ss *ScorecardService) AddHole(scorecardId string, hole Hole) error {
+func (ss *ScorecardStore) AddHole(scorecardId string, hole Hole) (Scorecard, error) {
 	cardId, err := primitive.ObjectIDFromHex(scorecardId)
 	if err != nil {
-		return err
+		return Scorecard{}, err
 	}
 
 	_, err = ss.coll.UpdateByID(db.Ctx, cardId, bson.D{{"$push", bson.D{{"holes", hole}}}})
 	if err != nil {
-		return err
+		return Scorecard{}, err
 	}
 
-	return nil
+	return ss.FindByID(scorecardId)
 }
 
-func (ss *ScorecardService) Complete(scorecardId string) error {
+func (ss *ScorecardStore) Complete(scorecardId string) (Scorecard, error) {
 	cardId, err := primitive.ObjectIDFromHex(scorecardId)
 	if err != nil {
-		return err
+		return Scorecard{}, err
 	}
 
 	_, err = ss.coll.UpdateByID(db.Ctx, cardId, bson.D{{"$set", bson.D{{"end_time", time.Now().UTC()}}}})
 	if err != nil {
 		fmt.Println(err.Error())
-		return err
+		return Scorecard{}, err
 	}
 
-	return nil
+	return ss.FindByID(scorecardId)
 }

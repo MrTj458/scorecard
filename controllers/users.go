@@ -10,12 +10,12 @@ import (
 )
 
 type Users struct {
-	s *models.UserService
+	store *models.UserStore
 }
 
-func NewUsers(service *models.UserService) *Users {
+func NewUsers(service *models.UserStore) *Users {
 	return &Users{
-		s: service,
+		store: service,
 	}
 }
 
@@ -23,88 +23,53 @@ func (uc *Users) Routes() *chi.Mux {
 	r := chi.NewRouter()
 
 	r.Post("/", uc.create)
-	r.Get("/", uc.findAll)
-	r.Get("/{id}", uc.findByID)
+	r.Get("/", uc.getAll)
+	r.Get("/{id}", uc.GetByID)
 
 	return r
 }
 
 func (uc *Users) create(w http.ResponseWriter, r *http.Request) {
 	// Decode JSON from request body
-	var u models.UserIn
-	if err := views.DecodeJSON(r.Body, &u); err != nil {
-		views.Error(w, http.StatusUnprocessableEntity, "invalid user object received")
+	var user models.UserIn
+	if err := views.DecodeJSON(r.Body, &user); err != nil {
+		views.Error(w, http.StatusBadRequest, "invalid JSON object received")
 		return
 	}
 
 	// Validate received JSON
-	if vErrors := views.Validate(u); vErrors != nil {
+	if vErrors := views.Validate(user); vErrors != nil {
 		views.ErrorWithFields(w, http.StatusUnprocessableEntity, "invalid user object received", vErrors)
 		return
 	}
 
-	// Check if username or email already exists
-	existingUsers, err := uc.s.FindExistingUsers(u.Email, u.Username)
-	if err != nil {
-		views.Error(w, http.StatusInternalServerError, "error checking for existing users")
-		return
-	}
-
-	if len(existingUsers) != 0 {
-		// Build error fields
-		var errors []views.ErrorField
-		for _, eUser := range existingUsers {
-			if u.Email == eUser.Email {
-				// Email already in use
-				errors = append(errors, views.ErrorField{
-					Location: "email",
-					Type:     "string",
-					Detail:   fmt.Sprintf("a user already exists with the email '%s'", u.Email),
-				})
-			}
-
-			if u.Username == eUser.Username {
-				// Username already in use
-				errors = append(errors, views.ErrorField{
-					Location: "username",
-					Type:     "string",
-					Detail:   fmt.Sprintf("a user already exists with the username '%s'", u.Username),
-				})
-			}
-		}
-
-		views.ErrorWithFields(w, http.StatusBadRequest, "email or username already in use", errors)
-		return
-	}
-
 	// Create new user
-	id, err := uc.s.Add(u)
+	newUser, err := uc.store.Add(user)
 	if err != nil {
-		views.Error(w, http.StatusInternalServerError, "unable to create new user")
+		switch err {
+		case models.ErrEmailInUse:
+			views.Error(w, http.StatusUnprocessableEntity, fmt.Sprintf("email '%s' already in use", user.Email))
+		case models.ErrUsernameInUse:
+			views.Error(w, http.StatusUnprocessableEntity, fmt.Sprintf("username '%s' already in use", user.Username))
+		default:
+			views.Error(w, http.StatusInternalServerError, "error creating new user")
+		}
 		return
 	}
 
-	// Find newly created user
-	ret, err := uc.s.FindByID(id)
-	if err != nil {
-		views.Error(w, http.StatusInternalServerError, "unable to find created user")
-		return
-	}
-
-	views.JSON(w, http.StatusCreated, ret)
+	views.JSON(w, http.StatusCreated, newUser)
 }
 
-func (uc *Users) findAll(w http.ResponseWriter, r *http.Request) {
+func (uc *Users) getAll(w http.ResponseWriter, r *http.Request) {
 	username := r.URL.Query().Get("username")
 
 	var users []models.User
 	var err error
 
 	if len(username) == 0 {
-		users, err = uc.s.FindAll()
+		users, err = uc.store.FindAll()
 	} else {
-		fmt.Println("Searching")
-		users, err = uc.s.SearchByUsername(username)
+		users, err = uc.store.SearchByUsername(username)
 	}
 
 	if err != nil {
@@ -115,10 +80,10 @@ func (uc *Users) findAll(w http.ResponseWriter, r *http.Request) {
 	views.JSON(w, http.StatusOK, users)
 }
 
-func (uc *Users) findByID(w http.ResponseWriter, r *http.Request) {
+func (uc *Users) GetByID(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
 
-	u, err := uc.s.FindByID(id)
+	u, err := uc.store.FindByID(id)
 	if err != nil {
 		views.Error(w, http.StatusNotFound, fmt.Sprintf("user with id '%s' not found", id))
 		return

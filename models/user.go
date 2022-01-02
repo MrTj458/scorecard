@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"time"
@@ -10,6 +11,11 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/crypto/bcrypt"
+)
+
+var (
+	ErrEmailInUse    = errors.New("email already in use")
+	ErrUsernameInUse = errors.New("username already in use")
 )
 
 type User struct {
@@ -26,23 +32,42 @@ type UserIn struct {
 	Password string `json:"password" validate:"required"`
 }
 
-type UserService struct {
+type UserStore struct {
 	db   *mongo.Database
 	coll *mongo.Collection
 }
 
-func NewUserService(db *mongo.Database) *UserService {
-	return &UserService{
+func NewUserStore(db *mongo.Database) *UserStore {
+	return &UserStore{
 		db:   db,
 		coll: db.Collection("users"),
 	}
 }
 
 // Add creates a new User in the database and returns the newly generated ID
-func (us *UserService) Add(user UserIn) (string, error) {
+func (us *UserStore) Add(user UserIn) (User, error) {
+	// Check if username or email is already in use
+	existingUsers, err := us.findExistingUsers(user.Email, user.Username)
+	if err != nil {
+		return User{}, err
+	}
+
+	if len(existingUsers) > 0 {
+		for _, u := range existingUsers {
+			if u.Email == user.Email {
+				return User{}, ErrEmailInUse
+			}
+
+			if u.Username == user.Username {
+				return User{}, ErrUsernameInUse
+			}
+		}
+	}
+
+	// Create new user
 	hashed, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
-		return "", err
+		return User{}, err
 	}
 
 	u := User{
@@ -55,14 +80,14 @@ func (us *UserService) Add(user UserIn) (string, error) {
 
 	_, err = us.coll.InsertOne(db.Ctx, u)
 	if err != nil {
-		return "", err
+		return User{}, err
 	}
 
-	return u.ID.Hex(), nil
+	return u, nil
 }
 
 // FindAll returns all users found in the database
-func (us *UserService) FindAll() ([]User, error) {
+func (us *UserStore) FindAll() ([]User, error) {
 	cur, err := us.coll.Find(db.Ctx, bson.D{})
 	if err != nil {
 		return nil, err
@@ -82,7 +107,7 @@ func (us *UserService) FindAll() ([]User, error) {
 }
 
 // FindById returns all users in the database with the given id
-func (us *UserService) FindByID(id string) (User, error) {
+func (us *UserStore) FindByID(id string) (User, error) {
 	oId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return User{}, err
@@ -98,7 +123,7 @@ func (us *UserService) FindByID(id string) (User, error) {
 }
 
 // FindByEmail returns all users in the database with the given email
-func (us *UserService) FindByEmail(email string) (User, error) {
+func (us *UserStore) FindByEmail(email string) (User, error) {
 	var u User
 	err := us.coll.FindOne(db.Ctx, bson.D{{"email", email}}).Decode(&u)
 	if err != nil {
@@ -110,7 +135,7 @@ func (us *UserService) FindByEmail(email string) (User, error) {
 
 // FindExistingUsers returns all the users in the database that have either
 // the given email or username
-func (us *UserService) FindExistingUsers(email, username string) ([]User, error) {
+func (us *UserStore) findExistingUsers(email, username string) ([]User, error) {
 	filter := bson.D{
 		{"$or", bson.A{bson.D{{"email", email}}, bson.D{{"username", username}}}},
 	}
@@ -134,7 +159,7 @@ func (us *UserService) FindExistingUsers(email, username string) ([]User, error)
 	return users, nil
 }
 
-func (us *UserService) SearchByUsername(username string) ([]User, error) {
+func (us *UserStore) SearchByUsername(username string) ([]User, error) {
 	filter := bson.D{
 		{"username", username},
 	}
