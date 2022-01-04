@@ -27,7 +27,9 @@ func (uc *Users) Routes() *chi.Mux {
 	r.Post("/", uc.create)
 	r.With(middleware.RequireLogin).Get("/", uc.getAll)
 	r.With(middleware.RequireLogin).Get("/{id}", uc.GetByID)
-	r.Post("/login", uc.LogIn)
+	r.With(middleware.RequireLogin).Get("/me", uc.me)
+	r.Post("/login", uc.logIn)
+	r.Post("/logout", uc.LogOut)
 
 	return r
 }
@@ -95,7 +97,19 @@ func (uc *Users) GetByID(w http.ResponseWriter, r *http.Request) {
 	views.JSON(w, http.StatusOK, u)
 }
 
-func (uc *Users) LogIn(w http.ResponseWriter, r *http.Request) {
+func (uc *Users) me(w http.ResponseWriter, r *http.Request) {
+	id := r.Context().Value("user").(string)
+
+	u, err := uc.store.FindByID(id)
+	if err != nil {
+		views.Error(w, http.StatusNotFound, fmt.Sprintf("user with id '%s' not found", id))
+		return
+	}
+
+	views.JSON(w, http.StatusOK, u)
+}
+
+func (uc *Users) logIn(w http.ResponseWriter, r *http.Request) {
 	type form struct {
 		Email    string `json:"email" validate:"required"`
 		Password string `json:"password" validate:"required"`
@@ -139,4 +153,17 @@ func (uc *Users) LogIn(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, cookie)
 
 	views.JSON(w, http.StatusOK, u)
+}
+
+func (uc *Users) LogOut(w http.ResponseWriter, r *http.Request) {
+	cookie := &http.Cookie{
+		Name:     "Auth",
+		Value:    "",
+		MaxAge:   -1,
+		HttpOnly: true,
+		Path:     "/",
+	}
+	http.SetCookie(w, cookie)
+
+	views.JSON(w, http.StatusOK, views.M{"ok": true})
 }

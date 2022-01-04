@@ -10,6 +10,9 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
+// M is an alias for map[string]interface{}
+type M map[string]interface{}
+
 // ErrorResponse represents an error message to be returned
 type ErrorResponse struct {
 	StatusCode int          `json:"status_code"`
