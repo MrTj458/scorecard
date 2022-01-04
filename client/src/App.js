@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom"
 import AppLayout from "./components/layout/app/AppLayout"
 import SiteLayout from "./components/layout/site/SiteLayout"
 import { UserProvider } from "./context/UserContext"
+import Bag from "./pages/app/Bag"
 import More from "./pages/app/More"
 import Profile from "./pages/app/Profile"
 import Rounds from "./pages/app/Rounds"
@@ -24,6 +25,7 @@ export default function App() {
         <Route element={<AppLayout />}>
           <Route path="/rounds" element={<Rounds />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/bag" element={<Bag />} />
           <Route path="/more" element={<More />} />
         </Route>
       </Routes>

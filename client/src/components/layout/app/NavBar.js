@@ -12,6 +12,10 @@ export default function NavBar() {
           <Link to="/profile">Profile</Link>
         </li>
         <div className="text-gray-400">|</div>
+        <div>
+          <Link to="/bag">Bag</Link>
+        </div>
+        <div className="text-gray-400">|</div>
         <li>
           <Link to="/more">More</Link>
         </li>
