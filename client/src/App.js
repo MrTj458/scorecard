@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom"
 import AppLayout from "./components/layout/app/AppLayout"
 import SiteLayout from "./components/layout/site/SiteLayout"
+import { UserProvider } from "./context/UserContext"
 import More from "./pages/app/More"
 import Profile from "./pages/app/Profile"
 import Rounds from "./pages/app/Rounds"
@@ -10,7 +11,7 @@ import SignUp from "./pages/SignUp"
 
 export default function App() {
   return (
-    <>
+    <UserProvider>
       <Routes>
         {/* Site routes */}
         <Route element={<SiteLayout />}>
@@ -26,6 +27,6 @@ export default function App() {
           <Route path="/more" element={<More />} />
         </Route>
       </Routes>
-    </>
+    </UserProvider>
   )
 }

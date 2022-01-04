@@ -44,5 +44,5 @@ func main() {
 	})
 
 	log.Println("Starting server on :3000")
-	http.ListenAndServe(":3000", r)
+	http.ListenAndServe(":8000", r)
 }
