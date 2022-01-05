@@ -88,7 +88,7 @@ export default function ScorecardScoring({ card: initialCard, complete }) {
             <button
               type="button"
               onClick={() => par > 1 && setPar(par - 1)}
-              className="bg-orange-400 rounded rounded-full p-2"
+              className="bg-orange-400 w-10 h-10 rounded-full p-2"
             >
               -
             </button>
@@ -96,7 +96,7 @@ export default function ScorecardScoring({ card: initialCard, complete }) {
             <button
               type="button"
               onClick={() => setPar(par + 1)}
-              className="bg-orange-400 rounded rounded-full p-2"
+              className="bg-orange-400 w-10 h-10 rounded-full p-2"
             >
               +
             </button>

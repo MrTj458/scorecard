@@ -32,7 +32,7 @@ export default function PlayerStrokes({ player, card, setStrokes }) {
         <button
           type="button"
           onClick={() => strokes > 1 && setStrokes(player.id, strokes - 1)}
-          className="bg-orange-400 rounded rounded-full p-2"
+          className="bg-orange-400 w-10 h-10 rounded-full p-2"
         >
           -
         </button>
@@ -40,7 +40,7 @@ export default function PlayerStrokes({ player, card, setStrokes }) {
         <button
           type="button"
           onClick={() => setStrokes(player.id, strokes + 1)}
-          className="bg-orange-400 rounded rounded-full p-2"
+          className="bg-orange-400 w-10 h-10 rounded-full p-2"
         >
           +
         </button>
