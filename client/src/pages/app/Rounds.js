@@ -34,6 +34,8 @@ export default function Rounds() {
       {cards.map((card) => (
         <ScoreCard key={card.id} card={card} />
       ))}
+
+      <div className="h-60"></div>
     </>
   )
 }

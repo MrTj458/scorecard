@@ -146,7 +146,7 @@ func (uc *Users) logIn(w http.ResponseWriter, r *http.Request) {
 	cookie := &http.Cookie{
 		Name:     "Auth",
 		Value:    u.ID.Hex(),
-		MaxAge:   300,
+		MaxAge:   1800,
 		HttpOnly: true,
 		Path:     "/",
 	}

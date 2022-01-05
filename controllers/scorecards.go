@@ -24,11 +24,11 @@ func (s *Scorecards) Routes() *chi.Mux {
 	r := chi.NewRouter()
 	r.Use(middleware.RequireLogin)
 
-	r.Post("/", s.create)
-	r.Get("/", s.getAll)
-	r.Get("/{id}", s.getByID)
-	r.Post("/{cardId}/hole", s.addHole)
-	r.Post("/{cardId}/complete", s.complete)
+	r.With(middleware.RequireLogin).Post("/", s.create)
+	r.With(middleware.RequireLogin).Get("/", s.getAll)
+	r.With(middleware.RequireLogin).Get("/{id}", s.getByID)
+	r.With(middleware.RequireLogin).Post("/{cardId}/hole", s.addHole)
+	r.With(middleware.RequireLogin).Post("/{cardId}/complete", s.complete)
 
 	return r
 }
