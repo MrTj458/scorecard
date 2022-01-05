@@ -7,7 +7,7 @@ import More from "./pages/app/More"
 import NewScorecard from "./pages/app/NewScorecard"
 import Profile from "./pages/app/Profile"
 import Rounds from "./pages/app/Rounds"
-import ScorecardDetail from "./pages/app/ScorecardDetail"
+import ScorecardPage from "./pages/app/ScorecardPage"
 import Home from "./pages/Home"
 import Login from "./pages/Login"
 import SignUp from "./pages/SignUp"
@@ -30,7 +30,7 @@ export default function App() {
           <Route path="/bag" element={<Bag />} />
           <Route path="/more" element={<More />} />
           <Route path="/scorecards/new" element={<NewScorecard />} />
-          <Route path="/scorecards/:id" element={<ScorecardDetail />} />
+          <Route path="/scorecards/:id" element={<ScorecardPage />} />
         </Route>
       </Routes>
     </UserProvider>
