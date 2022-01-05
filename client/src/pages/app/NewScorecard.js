@@ -1,5 +1,6 @@
 import axios from "axios"
 import { useContext, useState } from "react"
+import toast from "react-hot-toast"
 import { FaUserCircle } from "react-icons/fa"
 import { useNavigate } from "react-router-dom"
 import UserContext from "../../context/UserContext"
@@ -29,8 +30,10 @@ export default function NewScorecard() {
     try {
       const res = await axios.post("/api/scorecards", data)
       navigate(`/scorecards/${res.data.id}`)
+      toast.success("New Scorecard Created")
     } catch (e) {
       console.error(e.response.data)
+      toast.error("Unable to create new scorecard")
     }
   }
 
@@ -38,6 +41,10 @@ export default function NewScorecard() {
     <>
       <form onSubmit={handleSubmit} className="w-full">
         <fieldset className="w-full flex flex-col items-center">
+          <legend className="w-full text-center mt-2 text-xl font-bold">
+            New Scorecard
+          </legend>
+
           <div className="bg-gray-100 w-full p-2 m-2">
             <label htmlFor="course_name" className="w-full block">
               Course Name

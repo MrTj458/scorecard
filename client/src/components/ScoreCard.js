@@ -14,7 +14,7 @@ export default function ScoreCard({ card }) {
         <span className="text-black font-bold text-lg">
           {card.course_name}, {card.course_state}
         </span>{" "}
-        - {card.num_holes} holes - Par {par}
+        - {card.holes.length} holes - Par {par}
       </h3>
 
       <p className="text-xs text-gray-600">{date}</p>

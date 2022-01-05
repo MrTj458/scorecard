@@ -1,5 +1,6 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
+import toast from "react-hot-toast"
 import PlayerStrokes from "./PlayerStrokes"
 
 export default function ScorecardScoring({ card: initialCard }) {
@@ -11,7 +12,6 @@ export default function ScorecardScoring({ card: initialCard }) {
   const [scores, setScores] = useState([])
 
   useEffect(() => {
-    console.log("running")
     const initialScores = card.players.map((player) => {
       return {
         id: player.id,
@@ -52,18 +52,20 @@ export default function ScorecardScoring({ card: initialCard }) {
     try {
       const res = await axios.post(`/api/scorecards/${card.id}/hole`, data)
       setCard(res.data)
+      toast.success("Hole completed")
     } catch (e) {
       console.error(e.response.data)
+      toast.error("Unable to save hole, please try again")
     }
   }
 
   return (
     <form onSubmit={handleSubmit} className="w-full text-center">
+      <p className="text-gray-500">
+        {card.course_name}, {card.course_state}
+      </p>
       <fieldset>
-        <h1 className="font-bold mt-2 text-xl">
-          {card.course_name} - Hole {hole}
-        </h1>
-
+        <legend className="w-full font-bold mt-2 text-2xl">Hole {hole}</legend>
         <div className="bg-gray-100 w-full p-2 my-2">
           <label htmlFor="distance" className="w-full block">
             Distance
@@ -115,8 +117,18 @@ export default function ScorecardScoring({ card: initialCard }) {
           ))}
         </ul>
 
-        <button className="w-full my-2 bg-orange-500 text-white text-center py-2">
+        <button
+          type="submit"
+          className="w-full my-2 bg-orange-500 text-white text-center py-2"
+        >
           Next Hole
+        </button>
+
+        <button
+          type="button"
+          className="w-full my-2 bg-gray-500 text-white text-center py-2"
+        >
+          Complete Scorecard
         </button>
       </fieldset>
     </form>
