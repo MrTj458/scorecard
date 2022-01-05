@@ -1,5 +1,6 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
+import toast from "react-hot-toast"
 import { useParams } from "react-router-dom"
 import ScorecardDetail from "../../components/ScorecardDetail"
 import ScorecardScoring from "../../components/ScorecardScoring"
@@ -18,6 +19,17 @@ export default function ScorecardPage() {
     }
   }
 
+  const complete = async () => {
+    try {
+      const res = await axios.post(`/api/scorecards/${card.id}/complete`)
+      setCard(res.data)
+      toast.success("Scorecard marked as finished")
+    } catch (e) {
+      console.error(e.response.data)
+      toast.error("Unable to mark scorecard as finished, please try again")
+    }
+  }
+
   useEffect(() => {
     fetchScorecard()
   }, [])
@@ -27,7 +39,7 @@ export default function ScorecardPage() {
   }
 
   if (!card.end_time) {
-    return <ScorecardScoring card={card} />
+    return <ScorecardScoring card={card} complete={complete} />
   }
 
   return <ScorecardDetail card={card} />

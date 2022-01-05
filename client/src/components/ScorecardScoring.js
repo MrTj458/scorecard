@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
 import PlayerStrokes from "./PlayerStrokes"
 
-export default function ScorecardScoring({ card: initialCard }) {
+export default function ScorecardScoring({ card: initialCard, complete }) {
   const [card, setCard] = useState(initialCard)
   const hole = card.holes.length + 1
 
@@ -52,7 +52,7 @@ export default function ScorecardScoring({ card: initialCard }) {
     try {
       const res = await axios.post(`/api/scorecards/${card.id}/hole`, data)
       setCard(res.data)
-      toast.success("Hole completed")
+      toast.success("Hole Saved")
     } catch (e) {
       console.error(e.response.data)
       toast.error("Unable to save hole, please try again")
@@ -127,8 +127,9 @@ export default function ScorecardScoring({ card: initialCard }) {
         <button
           type="button"
           className="w-full my-2 bg-gray-500 text-white text-center py-2"
+          onClick={complete}
         >
-          Complete Scorecard
+          Finish Scorecard
         </button>
       </fieldset>
     </form>

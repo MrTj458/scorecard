@@ -11,7 +11,6 @@ export default function NewScorecard() {
 
   const [courseName, setCourseName] = useState("")
   const [courseState, setCourseState] = useState("")
-  const [numHoles, setNumHoles] = useState(18)
   const [players, setPlayers] = useState([
     { id: user.id, username: user.username },
   ])
@@ -23,7 +22,6 @@ export default function NewScorecard() {
       created_by: user.id,
       course_name: courseName,
       course_state: courseState,
-      num_holes: numHoles,
       players,
     }
 
@@ -70,22 +68,6 @@ export default function NewScorecard() {
               className="border-2 p-1 w-full"
               value={courseState}
               onChange={(e) => setCourseState(e.target.value)}
-            />
-          </div>
-
-          <div className="bg-gray-100 w-full p-2 m-2">
-            <label htmlFor="num_holes" className="w-full block">
-              Number of Holes
-            </label>
-            <input
-              required
-              type="number"
-              min="1"
-              max="36"
-              name="num_holes"
-              className="border-2 p-1 w-full"
-              value={numHoles}
-              onChange={(e) => setNumHoles(+e.target.value)}
             />
           </div>
 

@@ -15,7 +15,6 @@ type Scorecard struct {
 	CreatedBy   primitive.ObjectID `json:"created_by" bson:"created_by"`
 	StartTime   time.Time          `json:"start_time" bson:"start_time"`
 	EndTime     *time.Time         `json:"end_time" bson:"end_time"`
-	NumHoles    int                `json:"num_holes" bson:"num_holes"`
 	CourseName  string             `json:"course_name" bson:"course_name"`
 	CourseState string             `json:"course_state" bson:"course_state"`
 	Players     []Player           `json:"players" bson:"players"`
@@ -42,7 +41,6 @@ type Score struct {
 
 type ScorecardIn struct {
 	CreatedBy   primitive.ObjectID `json:"created_by" validate:"required"`
-	NumHoles    int                `json:"num_holes" validate:"required"`
 	CourseName  string             `json:"course_name" validate:"required"`
 	CourseState string             `json:"course_state" validate:"required"`
 	Players     []Player           `json:"players" validate:"required"`
@@ -66,7 +64,6 @@ func (ss *ScorecardStore) Add(scorecard ScorecardIn) (Scorecard, error) {
 		CreatedBy:   scorecard.CreatedBy,
 		StartTime:   time.Now().UTC(),
 		EndTime:     nil,
-		NumHoles:    scorecard.NumHoles,
 		CourseName:  scorecard.CourseName,
 		CourseState: scorecard.CourseState,
 		Players:     scorecard.Players,
