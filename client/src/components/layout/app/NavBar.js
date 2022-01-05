@@ -1,24 +1,39 @@
+import { BsThreeDots } from "react-icons/bs"
+import { FaListAlt, FaUser } from "react-icons/fa"
+import { MdBackpack } from "react-icons/md"
 import { Link } from "react-router-dom"
 
 export default function NavBar() {
   return (
-    <div className="fixed bottom-0 left-0 bg-gray-200 p-4 w-full border-t-2 border-t-gray-400">
-      <ul className="flex justify-around">
-        <li>
-          <Link to="/rounds">Rounds</Link>
-        </li>
-        <div className="text-gray-400">|</div>
-        <li>
-          <Link to="/profile">Profile</Link>
-        </li>
-        <div className="text-gray-400">|</div>
-        <div>
-          <Link to="/bag">Bag</Link>
-        </div>
-        <div className="text-gray-400">|</div>
-        <li>
-          <Link to="/more">More</Link>
-        </li>
+    <div className="fixed bottom-0 left-0 bg-gray-200 w-full border-t-2 border-t-gray-400">
+      <ul className="flex justify-around items-center p-4">
+        <Link to="/rounds">
+          <li className="flex flex-col items-center">
+            <FaListAlt />
+            Rounds
+          </li>
+        </Link>
+        <div className="h-9 w-[1px] bg-gray-300"></div>
+        <Link to="/profile">
+          <li className="flex flex-col items-center">
+            <FaUser />
+            Profile
+          </li>
+        </Link>
+        <div className="h-9 w-[1px] bg-gray-300"></div>
+        <Link to="/bag">
+          <li className="flex flex-col items-center">
+            <MdBackpack />
+            Bag
+          </li>
+        </Link>
+        <div className="h-9 w-[1px] bg-gray-300"></div>
+        <Link to="/more">
+          <li className="flex flex-col items-center">
+            <BsThreeDots />
+            More
+          </li>
+        </Link>
       </ul>
     </div>
   )

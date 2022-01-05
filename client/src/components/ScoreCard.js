@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import ScorePlayer from "./ScorePlayer"
 
 export default function ScoreCard({ card }) {
@@ -5,12 +6,12 @@ export default function ScoreCard({ card }) {
   const par = card.holes.reduce((prev, cur) => prev + cur.par, 0)
 
   return (
-    <a
-      href={`/scorecard/${card.id}`}
+    <Link
+      to={`/scorecards/${card.id}`}
       className="w-full bg-gray-100 m-2 px-2 py-1"
     >
-      <h3 className="text-lg text-gray-500">
-        <span className="text-black font-bold">
+      <h3 className="text-sm text-gray-500">
+        <span className="text-black font-bold text-lg">
           {card.course_name}, {card.course_state}
         </span>{" "}
         - {card.num_holes} holes - Par {par}
@@ -28,6 +29,6 @@ export default function ScoreCard({ card }) {
           />
         ))}
       </div>
-    </a>
+    </Link>
   )
 }

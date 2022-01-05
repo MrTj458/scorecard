@@ -1,3 +1,5 @@
+import { FaUserCircle } from "react-icons/fa"
+
 export default function ScorePlayer({ player, holes, coursePar }) {
   const totalStrokes = holes.reduce(
     (prev, cur) =>
@@ -13,11 +15,14 @@ export default function ScorePlayer({ player, holes, coursePar }) {
   }
 
   return (
-    <div>
-      <p className="font-bold">{player.username}</p>
-      <p className="text-gray-500">
-        {par} ({totalStrokes})
-      </p>
+    <div className="flex items-center gap-2 text-sm">
+      <FaUserCircle size="2em" />
+      <div>
+        <p className="font-bold">{player.username}</p>
+        <p className="text-gray-500">
+          {par} ({totalStrokes})
+        </p>
+      </div>
     </div>
   )
 }

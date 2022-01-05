@@ -1,5 +1,6 @@
 import axios from "axios"
 import { useContext, useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 import ScoreCard from "../../components/ScoreCard"
 import UserContext from "../../context/UserContext"
 
@@ -23,9 +24,13 @@ export default function Rounds() {
 
   return (
     <>
-      <p className="mt-2 bg-gray-100 w-full text-center">
-        {cards.length} Rounds Total
-      </p>
+      <Link
+        to="/scorecards/new"
+        className="w-full m-2 bg-orange-500 text-white text-center py-2"
+      >
+        Create New Scorecard
+      </Link>
+
       {cards.map((card) => (
         <ScoreCard key={card.id} card={card} />
       ))}
