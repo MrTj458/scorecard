@@ -31,9 +31,13 @@ export default function Rounds() {
         Create New Scorecard
       </Link>
 
-      {cards.map((card) => (
-        <ScoreCard key={card.id} card={card} />
-      ))}
+      <ul className="w-full">
+        {cards.map((card) => (
+          <li key={card.id}>
+            <ScoreCard card={card} />
+          </li>
+        ))}
+      </ul>
 
       <div className="h-60"></div>
     </>

@@ -8,7 +8,9 @@ export default function ScoreCard({ card }) {
   return (
     <Link
       to={`/scorecards/${card.id}`}
-      className="w-full bg-gray-100 m-2 px-2 py-1"
+      className={`block w-ful my-2 px-2 py-1 ${
+        card.end_time ? "bg-gray-100" : "bg-blue-200"
+      }`}
     >
       <h3 className="text-sm text-gray-500">
         <span className="text-black font-bold text-lg">

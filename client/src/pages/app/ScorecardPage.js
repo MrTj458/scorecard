@@ -1,12 +1,14 @@
 import axios from "axios"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import toast from "react-hot-toast"
 import { useParams } from "react-router-dom"
 import ScorecardDetail from "../../components/ScorecardDetail"
 import ScorecardScoring from "../../components/ScorecardScoring"
+import UserContext from "../../context/UserContext"
 
 export default function ScorecardPage() {
   const params = useParams()
+  const { user } = useContext(UserContext)
 
   const [card, setCard] = useState(null)
 
@@ -38,7 +40,7 @@ export default function ScorecardPage() {
     return <p>Loading...</p>
   }
 
-  if (!card.end_time) {
+  if (!card.end_time && card.created_by === user.id) {
     return <ScorecardScoring card={card} complete={complete} />
   }
 
