@@ -3,17 +3,37 @@ import { useContext, useState } from "react"
 import toast from "react-hot-toast"
 import { FaUserCircle } from "react-icons/fa"
 import { useNavigate } from "react-router-dom"
+import AddPlayer from "../../components/AddPlayer"
+import Modal from "../../components/Modal"
 import UserContext from "../../context/UserContext"
 
 export default function NewScorecard() {
   const navigate = useNavigate()
   const { user } = useContext(UserContext)
 
+  const [showModal, setShowModal] = useState(false)
+
   const [courseName, setCourseName] = useState("")
   const [courseState, setCourseState] = useState("")
   const [players, setPlayers] = useState([
     { id: user.id, username: user.username },
   ])
+
+  const addPlayer = (newPlayer) => {
+    if (players.length === 4) {
+      toast.error("Can't add more than 4 players.")
+      return
+    }
+
+    if (players.some((p) => p.id === newPlayer.id)) {
+      toast.error("Can't add the same player twice.")
+      return
+    }
+
+    setPlayers([...players, newPlayer])
+    setShowModal(false)
+    toast.success("Player added")
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -76,6 +96,7 @@ export default function NewScorecard() {
           <button
             type="button"
             className="w-full m-2 bg-gray-500 text-white text-center py-2"
+            onClick={() => setShowModal(!showModal)}
           >
             Add Player
           </button>
@@ -97,6 +118,9 @@ export default function NewScorecard() {
           </button>
         </fieldset>
       </form>
+      <Modal open={showModal} close={() => setShowModal(false)}>
+        <AddPlayer addPlayer={addPlayer} />
+      </Modal>
     </>
   )
 }
