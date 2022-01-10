@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+  db:
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=password
+
+  server:
+    build: .
+    command: go run .
+    volumes: 
+      - .:/go/src/app
+      - /app/node_modules
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_URL=mongodb://root:password@db
+      - DB_NAME=scorecard
+    depends_on:
+      - db
+
+  client:
+    build: ./client
+    command: npm start
+    volumes:
+      - ./client:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - server

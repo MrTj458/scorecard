@@ -19,7 +19,7 @@ export default function Scorecard({ card }) {
       color = "bg-blue-200"
     }
 
-    if (difference == -2) {
+    if (difference === -2) {
       color = "bg-blue-400"
     }
 
