@@ -29,6 +29,7 @@ func (s *Scorecards) Routes() *chi.Mux {
 	r.With(middleware.RequireLogin).Get("/{id}", s.getByID)
 	r.With(middleware.RequireLogin).Post("/{cardId}/hole", s.addHole)
 	r.With(middleware.RequireLogin).Post("/{cardId}/complete", s.complete)
+	r.With(middleware.RequireLogin).Delete("/{cardId}", s.delete)
 
 	return r
 }
@@ -128,4 +129,28 @@ func (sc *Scorecards) complete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	views.JSON(w, http.StatusOK, card)
+}
+
+func (sc *Scorecards) delete(w http.ResponseWriter, r *http.Request) {
+	cardId := chi.URLParam(r, "cardId")
+	userId := r.Context().Value("user").(string)
+
+	card, err := sc.store.FindByID(cardId)
+	if err != nil {
+		views.Error(w, http.StatusNotFound, "unable to find scorecard")
+		return
+	}
+
+	if userId != card.CreatedBy.Hex() {
+		views.Error(w, http.StatusForbidden, "you do not have permission to delete this scorecard")
+		return
+	}
+
+	err = sc.store.Delete(cardId)
+	if err != nil {
+		views.Error(w, http.StatusInternalServerError, "unable to delete scorecard")
+		return
+	}
+
+	views.JSON(w, http.StatusOK, views.M{"ok": true})
 }

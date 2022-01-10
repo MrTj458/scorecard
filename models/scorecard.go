@@ -168,3 +168,17 @@ func (ss *ScorecardStore) Complete(scorecardId string) (Scorecard, error) {
 
 	return ss.FindByID(scorecardId)
 }
+
+func (ss *ScorecardStore) Delete(scorecardId string) error {
+	cardId, err := primitive.ObjectIDFromHex(scorecardId)
+	if err != nil {
+		return err
+	}
+
+	_, err = ss.coll.DeleteOne(db.Ctx, bson.D{{"_id", cardId}})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
