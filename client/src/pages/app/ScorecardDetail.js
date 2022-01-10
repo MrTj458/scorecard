@@ -2,11 +2,11 @@ import axios from "axios"
 import { useContext, useEffect, useState } from "react"
 import toast from "react-hot-toast"
 import { useParams } from "react-router-dom"
-import ScorecardDetail from "../../components/ScorecardDetail"
-import ScorecardScoring from "../../components/ScorecardScoring"
+import HoleForm from "../../components/HoleForm"
+import Scorecard from "../../components/Scorecard"
 import UserContext from "../../context/UserContext"
 
-export default function ScorecardPage() {
+export default function ScorecardDetail() {
   const params = useParams()
   const { user } = useContext(UserContext)
 
@@ -41,8 +41,8 @@ export default function ScorecardPage() {
   }
 
   if (!card.end_time && card.created_by === user.id) {
-    return <ScorecardScoring card={card} complete={complete} />
+    return <HoleForm card={card} complete={complete} />
   }
 
-  return <ScorecardDetail card={card} />
+  return <Scorecard card={card} />
 }

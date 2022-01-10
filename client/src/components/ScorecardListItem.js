@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom"
-import ScorePlayer from "./ScorePlayer"
+import ScoreIcon from "./ScoreIcon"
 
-export default function ScoreCard({ card }) {
+export default function ScorecardListItem({ card }) {
   const date = new Date(card.start_time).toLocaleString()
   const par = card.holes.reduce((prev, cur) => prev + cur.par, 0)
 
@@ -23,7 +23,7 @@ export default function ScoreCard({ card }) {
 
       <div className="mt-1 flex flex-wrap justify-around">
         {card.players.map((player) => (
-          <ScorePlayer
+          <ScoreIcon
             key={player.id}
             player={player}
             holes={card.holes}

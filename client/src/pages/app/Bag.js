@@ -7,6 +7,7 @@ export default function Bag() {
   return (
     <>
       <h1>{user.username}'s Bag</h1>
+      <p>Feature coming soon.</p>
     </>
   )
 }

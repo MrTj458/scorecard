@@ -1,7 +1,7 @@
 import axios from "axios"
 import { useContext, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import ScoreCard from "../../components/ScoreCard"
+import ScorecardListItem from "../../components/ScorecardListItem"
 import UserContext from "../../context/UserContext"
 
 export default function Rounds() {
@@ -34,7 +34,7 @@ export default function Rounds() {
       <ul className="w-full">
         {cards.map((card) => (
           <li key={card.id}>
-            <ScoreCard card={card} />
+            <ScorecardListItem card={card} />
           </li>
         ))}
       </ul>

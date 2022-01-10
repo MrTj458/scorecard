@@ -1,9 +1,9 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
-import PlayerStrokes from "./PlayerStrokes"
+import PlayerStrokes from "./StrokeCounter"
 
-export default function ScorecardScoring({ card: initialCard, complete }) {
+export default function HoleForm({ card: initialCard, complete }) {
   const [card, setCard] = useState(initialCard)
   const hole = card.holes.length + 1
 

@@ -3,8 +3,8 @@ import { useContext, useState } from "react"
 import toast from "react-hot-toast"
 import { FaUserCircle } from "react-icons/fa"
 import { useNavigate } from "react-router-dom"
-import AddPlayer from "../../components/AddPlayer"
 import Modal from "../../components/Modal"
+import PlayerForm from "../../components/PlayerForm"
 import UserContext from "../../context/UserContext"
 
 export default function NewScorecard() {
@@ -119,7 +119,7 @@ export default function NewScorecard() {
         </fieldset>
       </form>
       <Modal open={showModal} close={() => setShowModal(false)}>
-        <AddPlayer addPlayer={addPlayer} />
+        <PlayerForm addPlayer={addPlayer} />
       </Modal>
     </>
   )

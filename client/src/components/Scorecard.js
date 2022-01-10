@@ -1,6 +1,6 @@
 import { FaUserCircle } from "react-icons/fa"
 
-export default function ScorecardDetail({ card }) {
+export default function Scorecard({ card }) {
   const startDate = new Date(card.start_time).toLocaleString()
   const endDate = new Date(card.end_time).toLocaleTimeString()
 
@@ -72,8 +72,11 @@ export default function ScorecardDetail({ card }) {
             }
 
             return (
-              <li className="flex justify-between items-center mt-2">
-                <div className="flex items-center gap-4">
+              <li
+                key={player.id}
+                className="flex justify-between items-center mt-2"
+              >
+                <div className="flex items-center gap-4 font-bold">
                   <FaUserCircle size="2em" />
                   {player.username}
                 </div>
@@ -89,32 +92,44 @@ export default function ScorecardDetail({ card }) {
 
       {/* Score Breakdown */}
       <section className="w-full mt-3 px-2">
-        <ul className="grid grid-cols-12 text-center">
+        <ul className="grid grid-cols-12 text-center text-sm">
           {card.holes.map((hole) => (
             <>
+              {/* Create new row */}
               {hole.number % 9 === 1 && (
-                <li className="col-span-3 mr-2">
-                  <div className="text-xs text-gray-500 text-right mt-4">
+                <li key={hole.number * -1} className="col-span-3 mr-2">
+                  <div className="text-gray-500 text-right mt-4">
                     <p>Hole</p>
                     <p>Dist</p>
                     <p>Par</p>
                   </div>
+
+                  {/* Show usernames */}
                   <ul>
                     {hole.scores.map((score) => (
-                      <li className="font-bold text-left">{score.username}</li>
+                      <li key={score.id} className="font-bold text-left">
+                        {score.username}
+                      </li>
                     ))}
                   </ul>
                 </li>
               )}
-              <li>
-                <div className="text-xs text-gray-500 mt-4">
+
+              {/* Show scores */}
+              <li key={hole.number}>
+                {/* Hole data */}
+                <div className="text-gray-500 mt-4">
                   <p className="font-bold text-black">{hole.number}</p>
                   <p>{hole.distance}</p>
                   <p>{hole.par}</p>
                 </div>
+
+                {/* Hole scores */}
                 <ul>
                   {hole.scores.map((score) => (
-                    <li className={getColor(hole, score)}>{score.strokes}</li>
+                    <li key={score.id} className={getColor(hole, score)}>
+                      {score.strokes}
+                    </li>
                   ))}
                 </ul>
               </li>

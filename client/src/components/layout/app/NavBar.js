@@ -1,5 +1,5 @@
 import { BsThreeDots } from "react-icons/bs"
-import { FaListAlt, FaUser } from "react-icons/fa"
+import { FaListAlt } from "react-icons/fa"
 import { MdBackpack } from "react-icons/md"
 import { Link } from "react-router-dom"
 
@@ -11,13 +11,6 @@ export default function NavBar() {
           <li className="flex flex-col items-center">
             <FaListAlt />
             Rounds
-          </li>
-        </Link>
-        <div className="h-9 w-[1px] bg-gray-300"></div>
-        <Link to="/profile">
-          <li className="flex flex-col items-center">
-            <FaUser />
-            Profile
           </li>
         </Link>
         <div className="h-9 w-[1px] bg-gray-300"></div>
