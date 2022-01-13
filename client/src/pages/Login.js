@@ -30,6 +30,10 @@ export default function Login() {
     <div className="mt-5">
       <form onSubmit={handleSubmit} className="border-2 border-gray-300">
         <fieldset className="flex flex-col items-center p-4">
+          <legend className="w-full mt-2 text-xl font-bold text-center">
+            Log In
+          </legend>
+
           <div>
             <label htmlFor="email" className="w-full block">
               Email
@@ -37,8 +41,9 @@ export default function Login() {
             <input
               required
               name="email"
-              type="text"
+              type="email"
               className="border-2 border-gray-300 p-1"
+              value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
@@ -52,11 +57,12 @@ export default function Login() {
               name="password"
               type="password"
               className="border-2 border-gray-300 p-1"
+              value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
 
-          {error && <p className="text-red-600">{error}</p>}
+          {error && <p className="mt-2 text-red-600">{error}</p>}
 
           <button
             type="submit"

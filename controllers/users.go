@@ -62,6 +62,17 @@ func (uc *Users) create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Set auth cookie
+	cookie := &http.Cookie{
+		Name:     "Auth",
+		Value:    newUser.ID.Hex(),
+		MaxAge:   86400,
+		HttpOnly: true,
+		Path:     "/",
+		SameSite: http.SameSiteStrictMode,
+	}
+	http.SetCookie(w, cookie)
+
 	views.JSON(w, http.StatusCreated, newUser)
 }
 
@@ -146,9 +157,10 @@ func (uc *Users) logIn(w http.ResponseWriter, r *http.Request) {
 	cookie := &http.Cookie{
 		Name:     "Auth",
 		Value:    u.ID.Hex(),
-		MaxAge:   1800,
+		MaxAge:   86400,
 		HttpOnly: true,
 		Path:     "/",
+		SameSite: http.SameSiteStrictMode,
 	}
 	http.SetCookie(w, cookie)
 
@@ -162,6 +174,7 @@ func (uc *Users) LogOut(w http.ResponseWriter, r *http.Request) {
 		MaxAge:   -1,
 		HttpOnly: true,
 		Path:     "/",
+		SameSite: http.SameSiteStrictMode,
 	}
 	http.SetCookie(w, cookie)
 
