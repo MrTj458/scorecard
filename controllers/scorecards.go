@@ -56,16 +56,9 @@ func (sc *Scorecards) create(w http.ResponseWriter, r *http.Request) {
 }
 
 func (sc *Scorecards) getAll(w http.ResponseWriter, r *http.Request) {
-	user := r.URL.Query().Get("user")
+	userId := r.Context().Value("user").(string)
 
-	var scorecards []models.Scorecard
-	var err error
-
-	if len(user) == 0 {
-		scorecards, err = sc.store.FindAll()
-	} else {
-		scorecards, err = sc.store.FindAllByUserId(user)
-	}
+	scorecards, err := sc.store.FindAllByUserId(userId)
 
 	if err != nil {
 		views.Error(w, http.StatusInternalServerError, "error retrieving scorecards")
@@ -76,6 +69,7 @@ func (sc *Scorecards) getAll(w http.ResponseWriter, r *http.Request) {
 }
 
 func (sc *Scorecards) getByID(w http.ResponseWriter, r *http.Request) {
+	userId := r.Context().Value("user").(string)
 	id := chi.URLParam(r, "id")
 
 	s, err := sc.store.FindByID(id)
@@ -84,11 +78,35 @@ func (sc *Scorecards) getByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	permission := false
+	for _, player := range s.Players {
+		if player.ID.Hex() == userId {
+			permission = true
+			break
+		}
+	}
+	if !permission {
+		views.Error(w, http.StatusForbidden, "you don't have access to this scorecard")
+		return
+	}
+
 	views.JSON(w, http.StatusOK, s)
 }
 
 func (sc *Scorecards) addHole(w http.ResponseWriter, r *http.Request) {
 	cardId := chi.URLParam(r, "cardId")
+	userId := r.Context().Value("user").(string)
+
+	card, err := sc.store.FindByID(cardId)
+	if err != nil {
+		views.Error(w, http.StatusNotFound, fmt.Sprintf("scorecard with id '%s' not found", cardId))
+		return
+	}
+
+	if card.CreatedBy.Hex() != userId {
+		views.Error(w, http.StatusForbidden, "you can't add holes to this scorecard")
+		return
+	}
 
 	var h models.Hole
 	if err := views.DecodeJSON(r.Body, &h); err != nil {
@@ -110,7 +128,7 @@ func (sc *Scorecards) addHole(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	card, err := sc.store.AddHole(cardId, h)
+	card, err = sc.store.AddHole(cardId, h)
 	if err != nil {
 		views.Error(w, http.StatusBadRequest, "unable to find scorecard to add hole")
 		return
@@ -121,8 +139,19 @@ func (sc *Scorecards) addHole(w http.ResponseWriter, r *http.Request) {
 
 func (sc *Scorecards) complete(w http.ResponseWriter, r *http.Request) {
 	cardId := chi.URLParam(r, "cardId")
+	userId := r.Context().Value("user").(string)
 
-	card, err := sc.store.Complete(cardId)
+	card, err := sc.store.FindByID(cardId)
+	if err != nil {
+		views.Error(w, http.StatusNotFound, fmt.Sprintf("scorecard with id '%s' not found", cardId))
+		return
+	}
+	if card.CreatedBy.Hex() != userId {
+		views.Error(w, http.StatusForbidden, "you can't mark this card as complete")
+		return
+	}
+
+	card, err = sc.store.Complete(cardId)
 	if err != nil {
 		views.Error(w, http.StatusBadRequest, "unable to find scorecard to complete")
 		return

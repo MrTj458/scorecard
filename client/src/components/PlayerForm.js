@@ -10,6 +10,11 @@ export default function PlayerForm({ addPlayer }) {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
+    if (username.length === 0) {
+      toast.error("You must enter a username to search for.")
+      return
+    }
+
     try {
       const res = await axios.get(`/api/users?username=${username}`)
       setUsers(res.data)

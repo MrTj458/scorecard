@@ -1,17 +1,14 @@
 import axios from "axios"
-import { useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import ScorecardListItem from "../../components/ScorecardListItem"
-import UserContext from "../../context/UserContext"
 
 export default function Rounds() {
-  const { user } = useContext(UserContext)
-
   const [cards, setCards] = useState([])
 
   const fetchCards = async () => {
     try {
-      const res = await axios.get(`/api/scorecards?user=${user.id}`)
+      const res = await axios.get(`/api/scorecards`)
       setCards(res.data)
     } catch (e) {
       console.error(e)

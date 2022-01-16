@@ -83,7 +83,8 @@ func (uc *Users) getAll(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	if len(username) == 0 {
-		users, err = uc.store.FindAll()
+		views.Error(w, http.StatusForbidden, "must include username to query for")
+		return
 	} else {
 		users, err = uc.store.SearchByUsername(username)
 	}
