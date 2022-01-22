@@ -1,7 +1,0 @@
-client/
-.dockerignore
-.env.example
-.gitignore
-docker-compose.yml
-Dockerfile
-README.md
