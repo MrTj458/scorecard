@@ -8,7 +8,9 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=password
 
   server:
-    build: .
+    build:
+      context: .
+      target: build
     command: go run .
     volumes: 
       - .:/go/src/app
@@ -22,7 +24,9 @@ services:
       - db
 
   client:
-    build: ./client
+    build:
+      context: ./client
+      target: build
     command: npm start
     volumes:
       - ./client:/app
