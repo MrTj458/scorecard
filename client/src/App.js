@@ -10,6 +10,7 @@ import Rounds from "./pages/app/Rounds"
 import ScorecardDetail from "./pages/app/ScorecardDetail"
 import Home from "./pages/Home"
 import Login from "./pages/Login"
+import SignOut from "./pages/SignOut"
 import SignUp from "./pages/SignUp"
 
 export default function App() {
@@ -21,6 +22,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/signout" element={<SignOut />} />
         </Route>
 
         {/* App Routes */}

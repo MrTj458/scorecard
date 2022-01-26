@@ -1,5 +1,6 @@
 import axios from "axios"
 import { useContext, useState } from "react"
+import toast from "react-hot-toast"
 import { useLocation, useNavigate } from "react-router-dom"
 import UserContext from "../context/UserContext"
 
@@ -20,6 +21,7 @@ export default function Login() {
       const res = await axios.post("/api/users/login", { email, password })
       setUser(res.data)
       navigate(from, { replace: true })
+      toast.success(`Signed in as ${res.data.username}`)
     } catch (e) {
       if (e.response.status === 401) {
         setError("Incorrect email or password")
