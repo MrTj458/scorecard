@@ -1,12 +1,17 @@
 import axios from "axios"
+import { useContext } from "react"
 import { useNavigate } from "react-router-dom"
+import UserContext from "../../context/UserContext"
 
 export default function More() {
+  const { setUser } = useContext(UserContext)
+
   const navigate = useNavigate()
 
   const logout = async () => {
     await axios.post("/api/users/logout")
     navigate("/")
+    setUser(null)
   }
 
   return (

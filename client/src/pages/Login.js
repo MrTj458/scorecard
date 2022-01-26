@@ -1,22 +1,25 @@
 import axios from "axios"
 import { useContext, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import UserContext from "../context/UserContext"
 
 export default function Login() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { setUser } = useContext(UserContext)
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
 
+  let from = location.state?.from?.pathname || "/rounds"
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
       const res = await axios.post("/api/users/login", { email, password })
       setUser(res.data)
-      navigate("/rounds", { replace: true })
+      navigate(from, { replace: true })
     } catch (e) {
       if (e.response.status === 401) {
         setError("Incorrect email or password")

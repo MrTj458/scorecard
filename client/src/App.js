@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom"
 import AppLayout from "./components/layout/app/AppLayout"
 import SiteLayout from "./components/layout/site/SiteLayout"
+import RequireAuth from "./components/RequireAuth"
 import { UserProvider } from "./context/UserContext"
 import Bag from "./pages/app/Bag"
 import More from "./pages/app/More"
@@ -23,7 +24,13 @@ export default function App() {
         </Route>
 
         {/* App Routes */}
-        <Route element={<AppLayout />}>
+        <Route
+          element={
+            <RequireAuth>
+              <AppLayout />
+            </RequireAuth>
+          }
+        >
           <Route path="/rounds" element={<Rounds />} />
           <Route path="/bag" element={<Bag />} />
           <Route path="/more" element={<More />} />
