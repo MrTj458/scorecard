@@ -35,6 +35,9 @@ func main() {
 		r.Mount("/scorecards", scorecardsController.Routes())
 	})
 
+	// Static files should be served from the build directory
+	r.Handle("/*", http.FileServer(http.Dir("build")))
+
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		views.Error(w, http.StatusNotFound, "route not found")
 	})

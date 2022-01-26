@@ -9,11 +9,11 @@ services:
 
   server:
     build:
-      context: ./server
+      context: .
       target: build
     command: go run .
     volumes: 
-      - ./server:/go/src/app
+      - ./:/go/src/app
     ports:
       - "8000:8000"
     environment:
