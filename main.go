@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/MrTj458/scorecard/controllers"
 	"github.com/MrTj458/scorecard/db"
@@ -12,16 +13,22 @@ import (
 	"github.com/MrTj458/scorecard/views"
 	"github.com/go-chi/chi/v5"
 	chiMiddleware "github.com/go-chi/chi/v5/middleware"
-	"github.com/joho/godotenv"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Println("Unable to load .env file, continuing anyway")
+	port := os.Getenv("PORT")
+	if len(port) == 0 {
+		port = "8000"
 	}
 
-	db := db.Connect(os.Getenv("DB_URL"), os.Getenv("DB_NAME"))
+	dbUrl := os.Getenv("DB_URL")
+	if len(dbUrl) == 0 {
+		log.Fatal("DB_URL environment variable must be set")
+	}
+	splitUrl := strings.Split(strings.Split(dbUrl, "?")[0], "/")
+	dbName := splitUrl[len(splitUrl)-1]
+
+	db := db.Connect(dbUrl, dbName)
 
 	r := chi.NewRouter()
 	r.Use(chiMiddleware.Logger)
@@ -36,7 +43,7 @@ func main() {
 	})
 
 	// Static files should be served from the build directory
-	r.Handle("/*", http.FileServer(http.Dir("build")))
+	r.Handle("/*", http.FileServer(http.Dir("static")))
 
 	r.NotFound(func(w http.ResponseWriter, r *http.Request) {
 		views.Error(w, http.StatusNotFound, "route not found")
@@ -46,6 +53,6 @@ func main() {
 		views.Error(w, http.StatusMethodNotAllowed, "method not allowed")
 	})
 
-	log.Println("Starting server on :3000")
-	http.ListenAndServe(":8000", r)
+	log.Printf("Starting server on port %s", port)
+	http.ListenAndServe(":"+port, r)
 }
