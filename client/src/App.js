@@ -1,17 +1,17 @@
 import { Route, Routes } from "react-router-dom"
 import AppLayout from "./components/layout/app/AppLayout"
 import SiteLayout from "./components/layout/site/SiteLayout"
-import RequireAuth from "./components/RequireAuth"
+import RequireAuthRoute from "./components/RequireAuthRoute"
 import { UserProvider } from "./context/UserContext"
-import Bag from "./pages/app/Bag"
-import More from "./pages/app/More"
-import NewScorecard from "./pages/app/NewScorecard"
-import Rounds from "./pages/app/Rounds"
-import ScorecardDetail from "./pages/app/ScorecardDetail"
-import Home from "./pages/Home"
-import Login from "./pages/Login"
-import SignOut from "./pages/SignOut"
-import SignUp from "./pages/SignUp"
+import BagPage from "./pages/app/BagPage"
+import MorePage from "./pages/app/MorePage"
+import ScorecardDetailPage from "./pages/app/scorecard/ScorecardDetailPage"
+import ScorecardNewPage from "./pages/app/scorecard/ScorecardNewPage"
+import ScorecardsListPage from "./pages/app/scorecard/ScorecardsListPage"
+import HomePage from "./pages/HomePage"
+import LoginPage from "./pages/LoginPage"
+import SignOutPage from "./pages/SignOutPage"
+import SignUpPage from "./pages/SignUpPage"
 
 export default function App() {
   return (
@@ -19,25 +19,25 @@ export default function App() {
       <Routes>
         {/* Site routes */}
         <Route element={<SiteLayout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/signout" element={<SignOut />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/signout" element={<SignOutPage />} />
         </Route>
 
         {/* App Routes */}
         <Route
           element={
-            <RequireAuth>
+            <RequireAuthRoute>
               <AppLayout />
-            </RequireAuth>
+            </RequireAuthRoute>
           }
         >
-          <Route path="/rounds" element={<Rounds />} />
-          <Route path="/bag" element={<Bag />} />
-          <Route path="/more" element={<More />} />
-          <Route path="/scorecards/new" element={<NewScorecard />} />
-          <Route path="/scorecards/:id" element={<ScorecardDetail />} />
+          <Route path="/app/scorecards" element={<ScorecardsListPage />} />
+          <Route path="/app/scorecards/new" element={<ScorecardNewPage />} />
+          <Route path="/app/scorecards/:id" element={<ScorecardDetailPage />} />
+          <Route path="/app/bag" element={<BagPage />} />
+          <Route path="/app/more" element={<MorePage />} />
         </Route>
       </Routes>
     </UserProvider>

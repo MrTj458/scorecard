@@ -2,11 +2,11 @@ import axios from "axios"
 import { useContext, useEffect, useState } from "react"
 import toast from "react-hot-toast"
 import { useParams } from "react-router-dom"
-import HoleForm from "../../components/HoleForm"
-import Scorecard from "../../components/Scorecard"
-import UserContext from "../../context/UserContext"
+import ScorecardDetail from "../../../components/scorecard/ScorecardDetail"
+import ScorecardHoleForm from "../../../components/scorecard/ScorecardHoleForm"
+import UserContext from "../../../context/UserContext"
 
-export default function ScorecardDetail() {
+export default function ScorecardDetailPage() {
   const params = useParams()
   const { user } = useContext(UserContext)
 
@@ -41,8 +41,8 @@ export default function ScorecardDetail() {
   }
 
   if (!card.end_time && card.created_by === user.id) {
-    return <HoleForm card={card} complete={complete} />
+    return <ScorecardHoleForm card={card} complete={complete} />
   }
 
-  return <Scorecard card={card} />
+  return <ScorecardDetail card={card} />
 }

@@ -3,11 +3,11 @@ import { useContext, useState } from "react"
 import toast from "react-hot-toast"
 import { FaUserCircle } from "react-icons/fa"
 import { useNavigate } from "react-router-dom"
-import Modal from "../../components/Modal"
-import PlayerForm from "../../components/PlayerForm"
-import UserContext from "../../context/UserContext"
+import Modal from "../../../components/Modal"
+import PlayerForm from "../../../components/scorecard/ScorecardAddPlayerForm"
+import UserContext from "../../../context/UserContext"
 
-export default function NewScorecard() {
+export default function ScorecardNewPage() {
   const navigate = useNavigate()
   const { user } = useContext(UserContext)
 

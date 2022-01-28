@@ -1,10 +1,10 @@
 import { useState } from "react"
 import { BsFillGearFill } from "react-icons/bs"
 import { FaUserCircle } from "react-icons/fa"
-import Modal from "./Modal"
-import ScorecardOptions from "./ScorecardOptions"
+import Modal from "../Modal"
+import ScorecardOptionsForm from "./ScorecardOptionsForm"
 
-export default function Scorecard({ card }) {
+export default function ScorecardDetail({ card }) {
   const startDate = new Date(card.start_time).toLocaleString()
   const endDate = new Date(card.end_time).toLocaleTimeString()
 
@@ -154,7 +154,7 @@ export default function Scorecard({ card }) {
         <div className="h-60"></div>
       </main>
       <Modal open={open} close={() => setOpen(false)}>
-        <ScorecardOptions card={card} />
+        <ScorecardOptionsForm card={card} />
       </Modal>
     </>
   )

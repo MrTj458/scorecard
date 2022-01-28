@@ -1,6 +1,6 @@
 import { FaUserCircle } from "react-icons/fa"
 
-export default function PlayerStrokes({ player, card, setStrokes }) {
+export default function ScorecardStrokeCounter({ player, card, setStrokes }) {
   const strokes = player.strokes
 
   const coursePar = card.holes.reduce((prev, cur) => prev + cur.par, 0)

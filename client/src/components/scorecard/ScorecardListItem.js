@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import ScoreIcon from "./ScoreIcon"
+import ScorecardScoreIcon from "./ScorecardScoreIcon"
 
 export default function ScorecardListItem({ card }) {
   const date = new Date(card.start_time).toLocaleString()
@@ -7,7 +7,7 @@ export default function ScorecardListItem({ card }) {
 
   return (
     <Link
-      to={`/scorecards/${card.id}`}
+      to={`/app/scorecards/${card.id}`}
       className={`block w-ful my-2 px-2 py-1 ${
         card.end_time ? "bg-gray-100" : "bg-blue-200"
       }`}
@@ -23,7 +23,7 @@ export default function ScorecardListItem({ card }) {
 
       <div className="mt-1 flex flex-wrap justify-around">
         {card.players.map((player) => (
-          <ScoreIcon
+          <ScorecardScoreIcon
             key={player.id}
             player={player}
             holes={card.holes}

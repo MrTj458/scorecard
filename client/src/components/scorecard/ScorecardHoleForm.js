@@ -1,9 +1,9 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
-import PlayerStrokes from "./StrokeCounter"
+import ScorecardStrokeCounter from "./ScorecardStrokeCounter"
 
-export default function HoleForm({ card: initialCard, complete }) {
+export default function ScorecardHoleForm({ card: initialCard, complete }) {
   const [card, setCard] = useState(initialCard)
   const hole = card.holes.length + 1
 
@@ -108,7 +108,7 @@ export default function HoleForm({ card: initialCard, complete }) {
         <ul className="w-full">
           {scores.map((player) => (
             <li key={player.id}>
-              <PlayerStrokes
+              <ScorecardStrokeCounter
                 player={player}
                 card={card}
                 setStrokes={setStrokes}

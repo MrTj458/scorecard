@@ -1,9 +1,9 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import ScorecardListItem from "../../components/ScorecardListItem"
+import ScorecardListItem from "../../../components/scorecard/ScorecardListItem"
 
-export default function Rounds() {
+export default function ScorecardsListPage() {
   const [cards, setCards] = useState([])
 
   const fetchCards = async () => {
@@ -22,7 +22,7 @@ export default function Rounds() {
   return (
     <>
       <Link
-        to="/scorecards/new"
+        to="/app/scorecards/new"
         className="w-full m-2 bg-orange-500 text-white text-center py-2"
       >
         Create New Scorecard

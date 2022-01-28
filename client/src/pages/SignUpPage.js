@@ -4,7 +4,7 @@ import toast from "react-hot-toast"
 import { useNavigate } from "react-router-dom"
 import UserContext from "../context/UserContext"
 
-export default function SignUp() {
+export default function SignUpPage() {
   const navigate = useNavigate()
   const { setUser } = useContext(UserContext)
 

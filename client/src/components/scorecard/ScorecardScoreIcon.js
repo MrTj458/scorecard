@@ -1,6 +1,6 @@
 import { FaUserCircle } from "react-icons/fa"
 
-export default function ScoreIcon({ player, holes, coursePar }) {
+export default function ScorecardScoreIcon({ player, holes, coursePar }) {
   const totalStrokes = holes.reduce(
     (prev, cur) =>
       prev + cur.scores.filter((score) => score.id === player.id)[0].strokes,

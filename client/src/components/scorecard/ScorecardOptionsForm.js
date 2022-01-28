@@ -2,9 +2,9 @@ import axios from "axios"
 import { useContext } from "react"
 import toast from "react-hot-toast"
 import { useNavigate } from "react-router-dom"
-import UserContext from "../context/UserContext"
+import UserContext from "../../context/UserContext"
 
-export default function ScorecardOptions({ card }) {
+export default function ScorecardOptionsForm({ card }) {
   const navigate = useNavigate()
   const { user } = useContext(UserContext)
 

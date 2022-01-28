@@ -4,7 +4,7 @@ import toast from "react-hot-toast"
 import { useLocation, useNavigate } from "react-router-dom"
 import UserContext from "../context/UserContext"
 
-export default function Login() {
+export default function LoginPage() {
   const navigate = useNavigate()
   const location = useLocation()
   const { setUser } = useContext(UserContext)

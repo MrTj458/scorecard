@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 
-export default function More() {
+export default function MorePage() {
   return (
     <>
       <Link

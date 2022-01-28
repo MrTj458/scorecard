@@ -3,7 +3,7 @@ import { useState } from "react"
 import toast from "react-hot-toast"
 import { FaUserCircle } from "react-icons/fa"
 
-export default function PlayerForm({ addPlayer }) {
+export default function ScorecardAddPlayerForm({ addPlayer }) {
   const [username, setUsername] = useState("")
   const [users, setUsers] = useState([])
 
