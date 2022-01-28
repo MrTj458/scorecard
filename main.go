@@ -4,7 +4,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 
 	"github.com/MrTj458/scorecard/controllers"
 	"github.com/MrTj458/scorecard/db"
@@ -25,8 +24,11 @@ func main() {
 	if len(dbUrl) == 0 {
 		log.Fatal("DB_URL environment variable must be set")
 	}
-	splitUrl := strings.Split(strings.Split(dbUrl, "?")[0], "/")
-	dbName := splitUrl[len(splitUrl)-1]
+
+	dbName := os.Getenv("DB_NAME")
+	if len(dbName) == 0 {
+		log.Fatal("DB_NAME environment variable must be set")
+	}
 
 	db := db.Connect(dbUrl, dbName)
 
@@ -36,10 +38,12 @@ func main() {
 
 	usersController := controllers.NewUsers(models.NewUserStore(db))
 	scorecardsController := controllers.NewScorecards(models.NewScorecardStore(db))
+	discsController := controllers.NewDiscs(models.NewDiscStore(db))
 
 	r.Route("/api", func(r chi.Router) {
 		r.Mount("/users", usersController.Routes())
 		r.Mount("/scorecards", scorecardsController.Routes())
+		r.Mount("/discs", discsController.Routes())
 	})
 
 	// Static files should be served from the build directory
