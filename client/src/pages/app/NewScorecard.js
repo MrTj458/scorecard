@@ -63,7 +63,7 @@ export default function NewScorecard() {
             New Scorecard
           </legend>
 
-          <div className="bg-gray-100 w-full p-2 m-2">
+          <div className="bg-gray-100 w-full p-4 m-2">
             <label htmlFor="course_name" className="w-full block">
               Course Name
             </label>
@@ -77,7 +77,7 @@ export default function NewScorecard() {
             />
           </div>
 
-          <div className="bg-gray-100 w-full p-2 m-2">
+          <div className="bg-gray-100 w-full p-4 m-2">
             <label htmlFor="course_state" className="w-full p-2">
               Course State
             </label>

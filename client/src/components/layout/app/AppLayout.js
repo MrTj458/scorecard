@@ -6,7 +6,9 @@ export default function AppLayout() {
   return (
     <>
       <TitleBar />
-      <Outlet />
+      <div className="w-screen max-w-2xl flex flex-col items-center">
+        <Outlet />
+      </div>
       <NavBar />
     </>
   )

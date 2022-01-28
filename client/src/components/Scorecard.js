@@ -105,12 +105,14 @@ export default function Scorecard({ card }) {
               <>
                 {/* Create new row */}
                 {hole.number % 9 === 1 && (
-                  <li key={hole.number * -1} className="col-span-3 mr-2">
-                    <div className="text-gray-500 text-right mt-4">
+                  <li key={hole.number * -1} className="col-span-3 ">
+                    <div className="text-gray-500 text-right mt-4 mr-2">
                       <p>Hole</p>
                       <p>Dist</p>
                       <p>Par</p>
                     </div>
+
+                    <hr className="p-1" />
 
                     {/* Show usernames */}
                     <ul>
@@ -131,6 +133,8 @@ export default function Scorecard({ card }) {
                     <p>{hole.distance}</p>
                     <p>{hole.par}</p>
                   </div>
+
+                  <hr className="p-1" />
 
                   {/* Hole scores */}
                   <ul>

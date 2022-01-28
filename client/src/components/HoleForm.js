@@ -66,7 +66,7 @@ export default function HoleForm({ card: initialCard, complete }) {
       </p>
       <fieldset>
         <legend className="w-full font-bold mt-2 text-2xl">Hole {hole}</legend>
-        <div className="bg-gray-100 w-full p-2 my-2">
+        <div className="bg-gray-100 w-full p-4 my-2">
           <label htmlFor="distance" className="w-full block">
             Distance
           </label>
