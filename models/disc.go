@@ -57,7 +57,7 @@ func (ds *DiscStore) Add(disc DiscIn) (Disc, error) {
 		Manufacturer: disc.Manufacturer,
 		Plastic:      disc.Plastic,
 		Weight:       disc.Weight,
-		Speed:        disc.Fade,
+		Speed:        disc.Speed,
 		Glide:        disc.Glide,
 		Turn:         disc.Turn,
 		Fade:         disc.Fade,

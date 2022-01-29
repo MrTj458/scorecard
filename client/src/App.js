@@ -3,7 +3,8 @@ import AppLayout from "./components/layout/app/AppLayout"
 import SiteLayout from "./components/layout/site/SiteLayout"
 import RequireAuthRoute from "./components/RequireAuthRoute"
 import { UserProvider } from "./context/UserContext"
-import BagPage from "./pages/app/BagPage"
+import BagDetailPage from "./pages/app/bag/BagDetailPage"
+import BagListPage from "./pages/app/bag/BagListPage"
 import MorePage from "./pages/app/MorePage"
 import ScorecardDetailPage from "./pages/app/scorecard/ScorecardDetailPage"
 import ScorecardNewPage from "./pages/app/scorecard/ScorecardNewPage"
@@ -36,7 +37,8 @@ export default function App() {
           <Route path="/app/scorecards" element={<ScorecardsListPage />} />
           <Route path="/app/scorecards/new" element={<ScorecardNewPage />} />
           <Route path="/app/scorecards/:id" element={<ScorecardDetailPage />} />
-          <Route path="/app/bag" element={<BagPage />} />
+          <Route path="/app/bag" element={<BagListPage />} />
+          <Route path="/app/bag/:id" element={<BagDetailPage />} />
           <Route path="/app/more" element={<MorePage />} />
         </Route>
       </Routes>
