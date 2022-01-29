@@ -19,7 +19,7 @@ export default function SignUpPage() {
     try {
       const res = await axios.post("/api/users", { username, email, password })
       setUser(res.data)
-      navigate("/rounds", { replace: true })
+      navigate("/app/scorecards", { replace: true })
     } catch (e) {
       if (e.response.status === 422) {
         setError(e.response.data.detail)

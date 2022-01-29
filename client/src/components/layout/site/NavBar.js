@@ -18,10 +18,10 @@ export default function NavBar() {
           {user ? (
             <>
               <li>
-                <Link to="/app/rounds">Go To App</Link>
+                <Link to="/app/scorecards">Go To App</Link>
               </li>
               <li>
-                <Link to="/app/signout">Sign Out</Link>
+                <Link to="/signout">Sign Out</Link>
               </li>
             </>
           ) : (

@@ -13,7 +13,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
 
-  let from = location.state?.from?.pathname || "/rounds"
+  let from = location.state?.from?.pathname || "/app/scorecards"
 
   const handleSubmit = async (e) => {
     e.preventDefault()
