@@ -28,7 +28,7 @@ type User struct {
 
 type UserIn struct {
 	Email    string `json:"email" validate:"required"`
-	Username string `json:"username" validate:"required"`
+	Username string `json:"username" validate:"required,max=30"`
 	Password string `json:"password" validate:"required"`
 }
 

@@ -41,8 +41,8 @@ type Score struct {
 
 type ScorecardIn struct {
 	CreatedBy   primitive.ObjectID `json:"created_by" validate:"required"`
-	CourseName  string             `json:"course_name" validate:"required"`
-	CourseState string             `json:"course_state" validate:"required"`
+	CourseName  string             `json:"course_name" validate:"required,max=50"`
+	CourseState string             `json:"course_state" validate:"required,max=2"`
 	Players     []Player           `json:"players" validate:"required"`
 }
 

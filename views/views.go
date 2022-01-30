@@ -85,10 +85,17 @@ func Validate(data interface{}) []ErrorField {
 	if err != nil {
 		var errors []ErrorField
 		for _, err := range err.(validator.ValidationErrors) {
+			var detail string
+			if len(err.Param()) > 0 {
+				detail = err.ActualTag() + ": " + err.Param()
+			} else {
+				detail = err.ActualTag()
+			}
+
 			errors = append(errors, ErrorField{
 				Location: err.Field(),
 				Type:     err.Type().String(),
-				Detail:   err.ActualTag(),
+				Detail:   detail,
 			})
 		}
 
