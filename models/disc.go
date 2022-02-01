@@ -91,3 +91,18 @@ func (ds *DiscStore) FindAllByUserId(id string) ([]Disc, error) {
 
 	return discs, nil
 }
+
+func (ds *DiscStore) FindById(id string) (Disc, error) {
+	oID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return Disc{}, err
+	}
+
+	var d Disc
+	err = ds.coll.FindOne(db.Ctx, bson.M{"_id": oID}).Decode(&d)
+	if err != nil {
+		return Disc{}, err
+	}
+
+	return d, nil
+}

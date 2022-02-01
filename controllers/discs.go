@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/MrTj458/scorecard/middleware"
@@ -25,6 +26,7 @@ func (dc *Discs) Routes() *chi.Mux {
 
 	r.Post("/", dc.create)
 	r.Get("/", dc.getAll)
+	r.Get("/{id}", dc.getOne)
 
 	return r
 }
@@ -61,4 +63,22 @@ func (dc *Discs) getAll(w http.ResponseWriter, r *http.Request) {
 	}
 
 	views.JSON(w, http.StatusOK, discs)
+}
+
+func (dc *Discs) getOne(w http.ResponseWriter, r *http.Request) {
+	userId := r.Context().Value("user").(string)
+	id := chi.URLParam(r, "id")
+
+	d, err := dc.store.FindById(id)
+	if err != nil {
+		views.Error(w, http.StatusNotFound, fmt.Sprintf("disc with id '%s' not found", id))
+		return
+	}
+
+	if d.CreatedBy != userId {
+		views.Error(w, http.StatusForbidden, "you don't have access to this disc")
+		return
+	}
+
+	views.JSON(w, http.StatusOK, d)
 }
