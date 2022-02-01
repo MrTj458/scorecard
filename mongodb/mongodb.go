@@ -1,4 +1,4 @@
-package db
+package mongodb
 
 import (
 	"context"
@@ -8,12 +8,10 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var Ctx = context.Background()
-
-// Connect connects to the MongoDB database with the uri and name provided,
-// panics if the connection can't be made
+// Connect connects to a MongoDB database with the given URL and database name.
+// It will panic if a connection can't be made.
 func Connect(uri, dbName string) *mongo.Database {
-	client, err := mongo.Connect(Ctx, options.Client().ApplyURI(uri))
+	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(uri))
 	if err != nil {
 		log.Fatal(err)
 	}
