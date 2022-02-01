@@ -47,7 +47,7 @@ export default function ScorecardNewPage() {
 
     try {
       const res = await axios.post("/api/scorecards", data)
-      navigate(`/scorecards/${res.data.id}`)
+      navigate(`/app/scorecards/${res.data.id}`)
       toast.success("New Scorecard Created")
     } catch (e) {
       console.error(e.response.data)
