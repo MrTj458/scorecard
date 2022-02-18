@@ -30,7 +30,7 @@ type DiscIn struct {
 	Name         string `json:"name" validate:"required,max=30"`
 	Type         string `json:"type" validate:"required,max=30"`
 	Manufacturer string `json:"manufacturer" validate:"required,max=30"`
-	Plastic      string `json:"plastic" validate:"required,max=30"`
+	Plastic      string `json:"plastic" validate:"max=30"`
 	Weight       int    `json:"weight" validate:"min=100,max=200"`
 	Speed        int    `json:"speed" validate:"min=1,max=14"`
 	Glide        int    `json:"glide" validate:"min=1,max=10"`

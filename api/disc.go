@@ -27,6 +27,7 @@ func (s *Server) createDisc(w http.ResponseWriter, r *http.Request) {
 
 	if errors, ok := validateStruct(disc); !ok {
 		renderErrorWithFields(w, http.StatusUnprocessableEntity, "invalid disc object received", errors)
+		return
 	}
 
 	discs, err := s.DiscService.Add(disc)
